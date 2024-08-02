@@ -56,7 +56,8 @@ toc
 close(mywaitbar)
 
 %%
-lnwdth = 1.5;
+myLineWidth = 1.5;
+myFontSize = 10;
 
 % Color scheme
 pink = [232 51 210]/255;
@@ -75,27 +76,29 @@ c = zeros(numcols,3);
 for kk = 1:numcols
     c(:,kk) = linspace(col1(kk),col2(kk),numcols);
 end
-% c = cat(1,darkgreen,darkgreen,darkgreen);
 lnstyle = {'-','--','-.'};
 
-%
-figure('Units','centimeters','Position',[15 15 4.32 5.26])
+% Enlarge figure by factor
+X = 2;
+
+% Generate figure to correct size
+figure('Units','centimeters','Position',[5 5 X*4.32 X*5.26])
 hold on
 
 % For each value of chi0
 for ii = 1:length(allEel)
-        plot(allf,mub_critical(ii,:),lnstyle{ii},'Color',c(ii,:),'LineWidth',lnwdth);
+        plot(allf,mub_critical(ii,:),lnstyle{ii},'Color',c(ii,:),'LineWidth',X*myLineWidth);
 end
 axis([min(allf) max(allf) -10 20])
 
 % Determine legend
 mylegend = cell(1,length(allEel));
 for ii = 1:length(allEel)
-    mylegend{ii} = ['$E_{el}= ' num2str(allEel(ii)) '~\mathrm{k_{B}T}$'];
+    mylegend{ii} = ['$E_{\rm elast}=' num2str(allEel(ii)) '~\mathrm{k_{B}T}$'];
 end
 
-legend(mylegend,'Location','northwest','Interpreter','latex')
+legend(mylegend,'Location','northeast','Interpreter','latex');
 xlabel('$f~(pN)$','Interpreter','latex')
 % ylabel('$\mu_b~(k_BT)$','Interpreter','latex')
 box on
-set(gca,'FontSize',10)
+set(gca,'FontSize',X*myFontSize)

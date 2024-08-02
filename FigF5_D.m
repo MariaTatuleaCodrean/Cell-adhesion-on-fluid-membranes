@@ -19,14 +19,14 @@ P.Eel = 200; % elastic energy, units of kT
 %--------------------------------------------------------------------------
 % Input variables
 %--------------------------------------------------------------------------
-allf1 = [1 2 3];                 % activation force
-allf = linspace(0,3,1000);       % vertical force 
+allchi0 = [0 7 15];              % attraction strength
+allf = linspace(0,5,1000);       % vertical force 
 allmub = linspace(-10,15,1000);  % effective chemical potential 
 
 %--------------------------------------------------------------------------
 % Output variables
 %--------------------------------------------------------------------------
-mub_critical = zeros(length(allf1),length(allf));  % clustering threshold
+mub_critical = zeros(length(allchi0),length(allf)); % clustering threshold
 
 %--------------------------------------------------------------------------
 % Main routine
@@ -35,8 +35,8 @@ tic
 numberofchiplots = 0;
 mywaitbar = waitbar(0,'Entering for loop');
 % For each specified value of chi0
-for ii = 1:length(allf1)
-    P.f1 = allf1(ii);
+for ii = 1:length(allchi0)
+    P.chi0 = allchi0(ii);
 
     % For range of forces
     for jj = 1:length(allf)
@@ -56,7 +56,8 @@ toc
 close(mywaitbar)
 
 %%
-lnwdth = 1.5;
+myLineWidth = 1.5;
+myFontSize = 10;
 
 % Color scheme
 pink = [232 51 210]/255;
@@ -68,7 +69,7 @@ ochre = [219 198 116]/255;
 darkgreen = [51 153 102]/255;
 grey = [1 1 1]*116/255;
 
-numcols = length(allf1);
+numcols = length(allchi0);
 col1 = green;
 col2 = darkgreen;
 c = zeros(numcols,3);
@@ -78,24 +79,27 @@ end
 % c = cat(1,darkgreen,darkgreen,darkgreen);
 lnstyle = {'-','--','-.'};
 
-%
-figure('Units','centimeters','Position',[15 15 4.92 5.26])
+% Enlarge figure by factor
+X = 1.5;
+
+% Generate figure to correct size
+figure('Units','centimeters','Position',[5 5 X*7 X*6])
 hold on
 
 % For each value of chi0
-for ii = 1:length(allf1)
-        plot(allf,mub_critical(ii,:),lnstyle{ii},'Color',c(ii,:),'LineWidth',lnwdth);
+for ii = 1:length(allchi0)
+        plot(allf,mub_critical(ii,:),lnstyle{ii},'Color',c(ii,:),'LineWidth',X*myLineWidth);
 end
 axis([min(allf) max(allf) -10 20])
 
 % Determine legend
-mylegend = cell(1,length(allf1));
-for ii = 1:length(allf1)
-    mylegend{ii} = ['$f_1= ' num2str(allf1(ii)) '$~pN'];
+mylegend = cell(1,length(allchi0));
+for ii = 1:length(allchi0)
+    mylegend{ii} = ['$\chi_0= ' num2str(allchi0(ii)) '~\mathrm{k_{B}T}$'];
 end
 
 legend(mylegend,'Location','northwest','Interpreter','latex')
 xlabel('$f~(pN)$','Interpreter','latex')
 ylabel('$\mu_b~(k_BT)$','Interpreter','latex')
 box on
-set(gca,'FontSize',10)
+set(gca,'FontSize',X*myFontSize)
